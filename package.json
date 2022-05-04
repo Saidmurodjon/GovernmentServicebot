@@ -1,0 +1,24 @@
+{
+  "name": "governmentservicebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saidmurodjon/GovernmentServicebot.git"
+  },
+  "author": "Saidmurodjon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saidmurodjon/GovernmentServicebot/issues"
+  },
+  "homepage": "https://github.com/Saidmurodjon/GovernmentServicebot#readme",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.57.0",
+    "nodemon": "^2.0.16"
+  }
+}
