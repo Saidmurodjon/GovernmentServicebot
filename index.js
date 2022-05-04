@@ -1,26 +1,30 @@
 const TelegramBot = require("node-telegram-bot-api");
+// const axois =require('axios') 
+const Controllers=require('./controllers.js')
+const { TOKEN } = require("./config.js");
+const options={
+  polling:true
+}
+const bot = new TelegramBot(TOKEN, options);
 
-// replace the value below with the Telegram token you receive from
-const token = "5127738101:AAGbPLH0jSYW_i-ayZtkG2cSCr_63sKocjY";
-// Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, { polling: true });
+bot.setMyCommands([  
+  {command:'/start',description:"Start bot"},
+  {command:'/info',description:'Bot info'}
+]);
 
-// Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => {
-  // 'msg' is the received Message from Telegram
-  // 'match' is the result of executing the regexp above on the text content
-  // of the message
+bot.on("text", (message) => Controllers.MessageController(message, bot));
 
-  const chatId = msg.chat.id;
-  const resp = match[1]; // the captured "whatever"
+// const start=()=>{
 
-  // send back the matched "whatever" to the chat
-  bot.sendMessage(chatId, resp);
-});
-bot.on("message", (msg) => {
-  const chatId = msg.chat.id;
-  const url = "https://telegram.org/img/t_logo.png";
-  bot.sendPhoto(chatId, url);
-  // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId,msg.text );  
-});
+// bot.on("message", async (msg) => {
+//   const chatId = msg.chat.id;
+//   const text = msg.text;
+//   if (text === "/start") {
+//     // const res = await axois.get(`http://localhost:5000/service`);
+//     return bot.sendMessage(chatId, "contact",);
+//   }
+//   return bot.sendMessage(chatId,"Nomalum so'z")
+// });
+
+// }
+// start()
