@@ -5,4 +5,14 @@ module.exports = {
       request_contact: true,
     })
   ),
+  setMainKey: new Array(
+    new Array(
+      {
+        text: "Service",
+      },
+      {
+        text: "Meeting",
+      }
+    )
+  ),
 };

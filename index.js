@@ -26,7 +26,12 @@ bot.setMyCommands([
 ]);
 
 async function Main() {
-  await bot.on("text", (message) => Controllers.MessageController(message, bot));
-  await bot.on("contact", (message) => Controllers.ContactController(message, bot));
+  await bot.on("message", (message) =>
+    Controllers.MessageController(message, bot)
+    // console.log(message.data)
+  );
+   await bot.on("callback_query", (message) =>
+      Controllers.InlineController(message, bot)
+   );
 }
-Main()
+Main();

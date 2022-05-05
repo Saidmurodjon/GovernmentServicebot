@@ -1,57 +1,79 @@
 const axios = require("axios");
 const UserModel = require("./users/UserModel");
 const keyboards = require("./keyboards/Keyboards");
+const InlineKeyboards=require('./keyboards/InlineKeyboards')
 const Functions = require("./Functions");
 module.exports = class Controllers {
   static async MessageController(message, bot) {
     const chat_id = message.chat.id;
-    const user_id = message.from.id;
     const text = message.text;
+    const contact = message.contact;
+    const first_name = message.from.first_name;
+    const user = await UserModel.findOne({ chatID: chat_id });
 
     if (text === "/start") {
       // const res = await axios.get("http://localhost:5000/service");
-      const user = await UserModel.findOne({ chatID: chat_id });
 
-      console.log(user);
       if (!user) {
-        return bot.sendMessage(
-          chat_id,
-          "Botdan foydalanish uchun telefon raqamingizni yuboring!",
-          {
-            reply_markup: {
-              resize_keyboard: true,
-              one_time_keyboard: true,
-              keyboard: keyboards.setKeyboard,
-            },
-          }
-        );
+        await Functions.setUser(bot, message);
       } else {
-        bot.sendMessage(chat_id, "ok");
-        // try {
-        //   const category = new UserModel({
-        //     chatID: chat_id,
-        //     date: "123",
-        //   });
-
-        //   category.save(category);
-        //   return bot.sendMessage(chat_id, "yaratildi");
-        // } catch (err) {
-        //   return bot.sendMessage(chat_id, "Hatolik");
-        // }
+        await bot.sendMessage(chat_id, `Salom ${first_name}`, {
+          reply_markup: {
+            resize_keyboard: true,
+            one_time_keyboard: true,
+            keyboard: keyboards.setMainKey,
+          },
+        });
       }
-      // console.log(respons);
+    } else if (contact && user.step === 1) {
+      const arr = [
+        {
+          _id: 1,
+          phone: "+998911312072",
+        },
+        {
+          _id: 2,
+          phone: "+998911312070",
+        },
+        {
+          _id: 3,
+          phone: "+998911312071",
+        },
+        {
+          _id: 4,
+          phone: "+998911312073",
+        },
+      ];
+      const contactCheck = arr.find(
+        (item) => item.phone === contact.phone_number
+      );
+      if (contactCheck) {
+        await Functions.setPhone(contact, bot, chat_id, user);
+      } else {
+        await bot.sendMessage(chat_id, "Siz botdan foydalana olmaysiz !");
+      }
+    } else if (text === "Service" && user.step === 2) {
+      await Functions.setService(bot, chat_id);
+    }else if (text === "Meeting") {
+      await bot.sendMessage(chat_id, "Quydagi url manzil orqali bo'laning 👇", {
+        reply_markup: {
+          resize_keyboard: true,
+          one_time_keyboard: true,
+          inline_keyboard: InlineKeyboards.setInlineMeet,
+        },
+      });
+    } else {
+      await bot.sendMessage(chat_id, "belgilanmagan buyruq!");
     }
   }
-  static async ContactController(message, bot) {
-    const chat_id = message.chat.id;
-    const contact = message.contact;
+  static async InlineController(message, bot) {
+    const chat_id = message.from.id;
+    if(message.data==="ok"){
+      await bot.sendMessage(chat_id, "Tasdiqlandi");
+    }else if(message.data==="no"){
+      await bot.sendMessage(chat_id, "Tasdiqlamadi");
 
-    const user = await UserModel.findOne({ chatID: chat_id });
- if(!user){
-      await Functions.setPhone(contact, bot, chat_id);
-      // console.log(contact.phone_number);
-    }else{
-      await bot.sendMessage(chat_id,'Belgilanmagan habar')
     }
+    console.log(message);
   }
 };

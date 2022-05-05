@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const UserSchema = mongoose.Schema({
   chatID: String,
-  date: String,
+  date: Date,
   phone:String,
   step:{
     type:Number,
