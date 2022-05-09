@@ -1,4 +1,4 @@
-const UserModel = require("./users/UserModel");
+const UserModel = require("./users/BotUserModel");
 const keyboards = require("./keyboards/Keyboards");
 const InlineKeyboards = require("./keyboards/InlineKeyboards");
 module.exports = class Functions {

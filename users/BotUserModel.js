@@ -9,5 +9,5 @@ const UserSchema = mongoose.Schema({
   }
 
 });
-const UserModel = mongoose.model("UsertModel", UserSchema);
-module.exports = UserModel;
+const BotUserModel = mongoose.model("BotUserModel", UserSchema);
+module.exports = BotUserModel;
