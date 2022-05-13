@@ -1,4 +1,16 @@
 module.exports = {
+  setMainInlineKey: new Array(
+    new Array(
+      {
+        text: "Meeting",
+        callback_data: "meet",
+      },
+      {
+        text: "Service",
+        callback_data: "service",
+      }
+    )
+  ),
   setInlineKey: new Array(
     new Array(
       {
@@ -12,9 +24,33 @@ module.exports = {
     )
   ),
   setInlineMeet: new Array(
+    new Array(
+      {
+        text: "Ortga",
+        callback_data: "no",
+      },
+      {
+        text: "Meeting",
+        url: "https://zoom.us/",
+      }
+    )
+  ),
+  setInlineServiceTrue: new Array(
     new Array({
-      text: "Meeting",
-      url: "https://zoom.us/",
+      text: "Tasdiqlash",
+      callback_data: "tasdiq",
     })
+  ),
+  setOldService: new Array(
+    new Array(
+      {
+        text: "Ortga",
+        callback_data: "no",
+      },
+      {
+        text: "Avvalgi chaqiruvlar",
+        callback_data: "oldService",
+      }
+    )
   ),
 };

@@ -11,7 +11,6 @@ module.exports = class Controllers {
     const contact = message.contact;
     const first_name = message.from.first_name;
     const user = await BotUserModel.findOne({ chatID: chat_id });
-
     if (text === "/start") {
       // const res = await axios.get("http://localhost:5000/service");
 
@@ -35,47 +34,53 @@ module.exports = class Controllers {
           reply_markup: {
             resize_keyboard: true,
             one_time_keyboard: true,
-            keyboard: keyboards.setMainKey,
+            inline_keyboard: InlineKeyboards.setMainInlineKey,
           },
         });
       }
     } else if (contact && user.step === 1) {
-      const client = await CilientModel.findOne({ tel: contact.phone_number});
+      const client = await CilientModel.findOne({ tel: contact.phone_number });
 
-      if (client) {
-        console.log(contact);
-        await Functions.setPhone(contact, bot, chat_id, user);
+      console.log(client);
+      console.log(contact);
+      if (client
+        // client.tel == contact.phone_number ||
+        // client.contact == +contact.phone_number
+      ) {
+        await Functions.setPhone(contact, bot, chat_id, user, client);
       } else {
+        // console.log(contact);
         await bot.sendMessage(chat_id, "Siz botdan foydalana olmaysiz !");
       }
-    } else if (text === "Service" && user.step === 2) {
-      await Functions.setService(bot, chat_id);
-    } else if (text === "Meeting") {
-      await bot.sendMessage(chat_id, "Quydagi url manzil orqali bo'laning 👇", {
-        reply_markup: {
-          resize_keyboard: true,
-          one_time_keyboard: true,
-          inline_keyboard: InlineKeyboards.setInlineMeet,
-        },
-      });
     } else {
       await bot.sendMessage(chat_id, "belgilanmagan buyruq!");
     }
   }
   static async InlineController(message, bot) {
     const chat_id = message.from.id;
-    if (message.data === "ok") {
-      await bot.editMessageText("Tasdiqlandi", {
-        chat_id: chat_id,
-        message_id: message.message.message_id,
-      });
+    const user = await BotUserModel.findOne({ chatID: chat_id });
+
+    // Serwice tekshiruvi boshlandi
+    if (message.data === "service" && user.step === 2) {
+      await Functions.setService(bot, chat_id, message);
       // await bot.deleteMessage(chat_id, message.message.message_id);
-    } else if (message.data === "no") {
-      await bot.editMessageText("Amal bekor qilindi", {
-        chat_id: chat_id,
-        message_id: message.message.message_id,
-      });
+    } else if (message.data === "meet") {
+      await Functions.setMeet(bot, chat_id, message);
     }
-    console.log(message.message.message_id);
+    // Serwice tekshiruvi tugadi
+    //
+    if (message.data === "ok") {
+      await Functions.setVerifyService(bot, chat_id, message);
+    } else if (message.data === "no") {
+      await Functions.setBackService(bot, chat_id, message);
+    }
+    // service hizmatini tasdiqlash
+    if (message.data === "tasdiq") {
+      await Functions.setServiceTasdiq(bot, chat_id, message);
+    }
+    if (message.data === "oldService") {
+      await Functions.setBackService(bot, chat_id, message);
+      await Functions.setOldService(bot, chat_id, message);
+    }
   }
 };
