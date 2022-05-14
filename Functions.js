@@ -45,7 +45,6 @@ module.exports = class Functions {
         phone: contact.phone_number,
       };
       const elem = {
-        lavozim: "demo value",
         chatID: chat_id,
       };
       await BotUserModel.findByIdAndUpdate(user._id, category);
